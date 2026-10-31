@@ -38,6 +38,7 @@ enum PopBarPreferences {
         static let hotKeyEnabled      = "popup.hotKeyEnabled"
         static let hotKey             = "popup.hotKey"
         static let simulateCopy       = "popup.simulateCopy"
+        static let middleClickWhenSelected = "popup.middleClickWhenSelected"
         static let excludedApps       = "popup.excludedApps"
         static let terminalApps       = "popup.terminalApps"
         static let copyFirstApps      = "popup.copyFirstApps"
@@ -348,6 +349,12 @@ enum PopBarPreferences {
     static var simulateCopy: Bool {
         get { config.bool(P.simulateCopy, default: true) }
         set { config.set(P.simulateCopy, newValue) }
+    }
+
+    /// Middle click with text selected opens the ring at the display centre instead of passing the click on.
+    static var middleClickWhenSelected: Bool {
+        get { config.bool(P.middleClickWhenSelected, default: true) }
+        set { config.set(P.middleClickWhenSelected, newValue) }
     }
 
     /// Selecting in a browser's address bar does not open the popup (issue #6).

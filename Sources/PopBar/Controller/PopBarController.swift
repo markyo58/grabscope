@@ -17,6 +17,7 @@ final class PopBarController {
 
     private let resolver: SelectionResolver
     private let monitor: GlobalInputMonitor
+    private let middleClick = MiddleClickTap()
     private let windows: PopBarWindowManager
     private let llm: LLMService
     private let actionStore: ActionStore
@@ -130,6 +131,8 @@ final class PopBarController {
             return
         }
         monitor.start()
+        middleClick.onRing = { [weak self] centre in self?.handleTrigger(.hotKey, anchor: centre) }
+        if PopBarPreferences.middleClickWhenSelected { middleClick.start() }
         Self.log.info("started\(PopBarPreferences.popupEnabled ? "" : " (paused; watching for the popup hotkey)")")
     }
 
@@ -144,7 +147,7 @@ final class PopBarController {
             Self.log.info("paused — monitor kept for the popup hotkey")
             return
         }
-        monitor.stop()
+        monitor.stop(); middleClick.stop()
         // OCR is deliberately NOT stopped here: its lifecycle is independent of the
         // selection monitor, so disabling the selection popup must not kill the OCR
         // hotkey. Full OCR teardown happens via `stopScreenOCR()` on tool shutdown.
@@ -184,7 +187,7 @@ final class PopBarController {
     func shutdown() {
         resolveTask?.cancel()
         resolveGeneration &+= 1
-        monitor.stop()
+        monitor.stop(); middleClick.stop()
         windows.closeAll()
         popupHotKey?.invalidate()
         popupHotKey = nil
@@ -218,7 +221,7 @@ final class PopBarController {
             popupHotKey = nil
             ok = true
             // Paused: nothing needs the monitor any more. Open windows stay.
-            if !wantsMonitor { monitor.stop() }
+            if !wantsMonitor { monitor.stop(); middleClick.stop() }
         }
         return ok
     }
@@ -280,7 +283,7 @@ final class PopBarController {
         case hotKey
     }
 
-    private func handleTrigger(_ source: TriggerSource = .gesture) {
+    private func handleTrigger(_ source: TriggerSource = .gesture, anchor: CGPoint? = nil) {
         // Paused: the popup does not open by itself, and the selection is not even
         // read — reading can press ⌘C for the user, which a paused app must not do.
         // Checked here, before anything else, and not later when showing.
@@ -315,7 +318,7 @@ final class PopBarController {
         // reached with the mouse, and opening it away from the pointer means a
         // long move across other apps (which can dismiss it), or the pointer
         // already resting on a sub-ring slot and opening that submenu.
-        let loc = source == .gesture ? monitor.lastMouseUpLocation : NSEvent.mouseLocation
+        let loc = anchor ?? (source == .gesture ? monitor.lastMouseUpLocation : NSEvent.mouseLocation)
         // Same spot + the transient already showing its actions → this is a
         // re-trigger for the SAME selection growing (e.g. double-click then triple-
         // click). We re-read so the action uses the LATEST selection (the whole
