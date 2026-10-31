@@ -24,10 +24,23 @@ def utc():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def clean_url(text):
+    """The one URL a selection means, or None: trims spaces/quotes/brackets/trailing punctuation, unwraps
+    <url> and [title](url), and adds https:// to a bare github.com/... or youtube.com/... or www.... form."""
+    t = text.strip().strip("\"'`“”‘’")
+    m = re.fullmatch(r"\[[^\]]*\]\((\S+?)\)", t) or re.fullmatch(r"<(\S+)>", t)
+    if m:
+        t = m.group(1)
+    t = t.rstrip(".,;:!?)]}>\"'")
+    if re.fullmatch(r"(www\.|github\.com/|youtu\.be/|(m\.)?youtube\.com/)\S+", t):
+        t = "https://" + t
+    return t if URL.fullmatch(t) else None
+
+
 def link_kind(text):
-    """'github'|'youtube'|'web' when the whole trimmed selection is one URL, else None."""
-    t = text.strip()
-    if not URL.fullmatch(t):
+    """'github'|'youtube'|'web' when the whole selection is one URL, else None."""
+    t = clean_url(text)
+    if not t:
         return None
     host = (urllib.parse.urlparse(t).hostname or "").lower()
     if host == "github.com" or host.endswith(".github.com"):
@@ -76,11 +89,12 @@ def judge(text, choose_fn=None, links=LINKS, ring=None, explain=None):
     t = text.strip()
     lk = link_kind(t)
     if lk:
+        t = clean_url(t)
         os.makedirs(os.path.dirname(links), exist_ok=True)
         with open(links, "a") as fh:
             fh.write("%s\t%s\t%s\t\t\n" % (utc(), lk, t))
         log(lk, "links", len(t), True)
-        return lk, "links", "→ Links (%s)" % lk
+        return lk, "links", "Added to Links (%s):\n%s" % (lk, t)
     code, ok = is_code(t, choose_fn)
     if code:
         out = (explain or (lambda s: subprocess.run([ASK, "Explain what this code or command does, briefly."],
@@ -90,7 +104,7 @@ def judge(text, choose_fn=None, links=LINKS, ring=None, explain=None):
     # ponytail: the bell wakes EVERY watching session, not the one chat Mark used last; pol 5b034bbb owns the last-chat design
     (ring or (lambda s: subprocess.run([RING, "grabscope:judge", s], timeout=5)))(t)
     log("text", "chat", len(t), ok)
-    return "text", "chat", "→ chat"
+    return "text", "chat", "Sent to the bell (every watching session sees it; no single chat yet):\n%s" % (t[:200] + ("…" if len(t) > 200 else ""))
 
 
 if __name__ == "__main__":
