@@ -691,3 +691,6 @@
 "backup.import.partial" = "备份恢复了一部分之后出了错。";
 "backup.import.relaunch.info" = "%@ 现在会重新启动，这样用的才是恢复后的设置、图标和 Key。";
 "backup.error.generic" = "备份文件处理出错了。详细原因记在日志里（高级 → 诊断）。";
+
+"popbar.tag.edit" = "编辑";
+"popbar.error.emptyclipboard" = "剪贴板为空。";

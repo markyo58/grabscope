@@ -139,7 +139,7 @@ enum HistoryRecorder {
     static func category(of kind: PopBarActionConfig.Kind) -> HistoryRecord.Category {
         switch kind {
         case .ai, .systemTranslate:                              return .ai
-        case .transform, .copy:                                  return .text
+        case .transform, .copy, .cut, .delete, .pasteOver:       return .text
         case .speak:                                             return .speech
         case .openURL, .webPreview, .quickLook, .revealInFinder: return .web
         case .shortcut, .script, .keystroke:                     return .automation

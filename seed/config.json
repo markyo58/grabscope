@@ -10,11 +10,10 @@
     },
     {
       "iconSymbol": "doc.on.clipboard",
-      "id": "9A39E474-FD9E-41D0-8D59-1C345FA38475",
-      "kind": "keystroke",
+      "id": "76A9525D-8B25-4CAF-81BF-364638AD3D79",
       "schemaVersion": 1,
       "title": "Paste over",
-      "keys": "cmd+v"
+      "kind": "pasteOver"
     },
     {
       "iconSymbol": "scope",
@@ -42,16 +41,6 @@
       "schemaVersion": 1,
       "script": "~/.config/grabscope/to-claude.sh tell",
       "title": "Claude"
-    },
-    {
-      "iconSymbol": "wand.and.stars",
-      "id": "6EE1408D-43AC-4B37-B346-75C613C70AA0",
-      "kind": "ai",
-      "output": "compare",
-      "prompt": "You are a writing editor. Rewrite the user's text to be clearer, more fluent and natural, preserving its original language and meaning. Output ONLY the polished text, with no quotes, labels, or explanation.",
-      "schemaVersion": 1,
-      "title": "Polish",
-      "urlName": "polish"
     },
     {
       "id": "6579382B-86FD-4ED9-B0BB-A1503CF74809",
@@ -176,16 +165,32 @@
           "kind": "copy",
           "schemaVersion": 1,
           "title": "Copy"
+        },
+        {
+          "iconSymbol": "wand.and.stars",
+          "id": "6EE1408D-43AC-4B37-B346-75C613C70AA0",
+          "kind": "ai",
+          "output": "compare",
+          "prompt": "You are a writing editor. Rewrite the user's text to be clearer, more fluent and natural, preserving its original language and meaning. Output ONLY the polished text, with no quotes, labels, or explanation.",
+          "schemaVersion": 1,
+          "title": "Polish",
+          "urlName": "polish"
         }
       ]
     },
     {
+      "iconSymbol": "scissors",
+      "id": "0B8724AC-4833-4DA6-B687-F06A49D1540E",
+      "schemaVersion": 1,
+      "title": "Cut",
+      "kind": "cut"
+    },
+    {
       "iconSymbol": "trash",
-      "id": "0A35DA45-142F-4373-A83F-B1A4D9ED01A0",
-      "kind": "keystroke",
+      "id": "5ECE8C81-59F4-4AE1-9CEE-38FAE1A4EE36",
       "schemaVersion": 1,
       "title": "Delete",
-      "keys": "delete"
+      "kind": "delete"
     }
   ],
   "capsule": {

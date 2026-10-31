@@ -692,3 +692,6 @@
 "backup.import.partial" = "Part of the backup was restored before something went wrong.";
 "backup.import.relaunch.info" = "%@ restarts now, so the restored settings, icons and keys are the ones it uses.";
 "backup.error.generic" = "Something went wrong with the backup file. Details are in the log (Advanced → Diagnostics).";
+
+"popbar.tag.edit" = "EDITS";
+"popbar.error.emptyclipboard" = "The clipboard is empty.";

@@ -85,6 +85,9 @@ struct PopBarActionConfig: Codable, Identifiable, Equatable {
 
     enum Kind: String, Codable {
         case copy           // local: write the selection to the clipboard
+        case cut            // local: copy the selection, then remove it from the app (ReplaceWriter)
+        case delete         // local: remove the selection from the app (ReplaceWriter)
+        case pasteOver      // local: replace the selection with the clipboard text (ReplaceWriter)
         case ai             // send `prompt` + the selection to a model
         case webPreview     // local: open the selection's associated link in the mini-browser
         case quickLook      // local: Quick Look the selected path (folders open in Finder)
@@ -163,6 +166,7 @@ struct PopBarActionConfig: Codable, Identifiable, Equatable {
     /// selection, never a stand-in for it, so it always goes to the panel.
     var outputMode: ActionOutput {
         if kind == .transform, op == TextTransform.count.rawValue { return .panel }
+        if [.cut, .delete, .pasteOver].contains(kind) { return .replace }   // native edits always write back in place
         return output.flatMap(ActionOutput.init(rawValue:)) ?? .panel
     }
 

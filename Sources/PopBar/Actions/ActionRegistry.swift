@@ -30,6 +30,20 @@ enum ActionRegistry {
             }
             return .none
 
+        case .cut:
+            await MainActor.run {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(text, forType: .string)
+            }
+            return .output("")
+
+        case .delete:
+            return .output("")
+
+        case .pasteOver:
+            let clip = await MainActor.run { NSPasteboard.general.string(forType: .string) ?? "" }
+            return clip.isEmpty ? .error(L("popbar.error.emptyclipboard")) : .output(clip)
+
         case .webPreview:
             return webPreviewPresentation(url: url, text: text)
 

@@ -183,6 +183,7 @@ struct ActionsPage: View {
                 tags.append(Tag(text: L("popbar.tag.needsKey"), color: .orange, solid: true))
             }
         }
+        if [.cut, .delete, .pasteOver].contains(action.kind) { tags.append(Tag(text: L("popbar.tag.edit"), color: .orange)) }
         if action.kind == .script { tags.append(Tag(text: L("popbar.tag.script"), color: .red)) }
         if action.kind == .keystroke, let combo = KeyCombo(strictConfigString: action.keys ?? "") {
             tags.append(Tag(text: combo.display, color: .mint))
