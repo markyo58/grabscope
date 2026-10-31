@@ -33,6 +33,12 @@ enum KeySender {
         postKeyCombo(virtualKey: CGKeyCode(kVK_ANSI_C), flags: .maskCommand)
     }
 
+    /// Post Delete: removes the selection in an app that will not take an empty write through
+    /// Accessibility (Cut and Delete). A paste of "" does nothing, so it cannot stand in.
+    static func deleteSelection() {
+        postKeyCombo(virtualKey: CGKeyCode(kVK_Delete), flags: [])
+    }
+
     /// Post ⌘V — used to put a result in place of the selection when the app
     /// does not take it through Accessibility. Tagged like `copy()`.
     static func paste() {

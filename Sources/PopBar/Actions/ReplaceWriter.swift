@@ -70,6 +70,11 @@ enum ReplaceWriter {
             log.info("replaced through Accessibility (\(mode))")
             return .replaced
         }
+        if text.isEmpty {
+            KeySender.deleteSelection()   // an empty paste is a no-op; Delete removes the selection
+            log.info("removed by Delete key (\(mode))")
+            return .pasted
+        }
         paste(text)
         log.info("replaced by paste (\(mode))")
         return .pasted
