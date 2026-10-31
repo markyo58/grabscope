@@ -23,7 +23,7 @@ enum Analytics {
     private static let log = FileLog("Analytics")
 
     /// The Aptabase app key (US region).
-    private static let appKey = "A-US-7811464121"
+    private static let appKey = ""   // GrabScope: no analytics, ever (upstream key removed)
 
     private static var started = false
 

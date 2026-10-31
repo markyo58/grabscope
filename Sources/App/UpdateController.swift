@@ -20,7 +20,7 @@ final class UpdateController: NSObject, SPUStandardUserDriverDelegate {
     override init() {
         super.init()
         updaterController = SPUStandardUpdaterController(
-            startingUpdater: true,
+            startingUpdater: false,   // GrabScope: no auto-update; installs are by hand
             updaterDelegate: nil,
             userDriverDelegate: self
         )

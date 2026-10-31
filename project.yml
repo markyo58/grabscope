@@ -10,24 +10,24 @@
 #  Keep the six in sync by hand; YAML cannot concatenate strings, so the
 #  bundle id is spelled out rather than derived from the name.
 # ═══════════════════════════════════════════════════════════════════════════
-name: &APP_NAME QDuo
+name: &APP_NAME GrabScope
 
 .brand:
   # The reverse-DNS id WITHOUT a configuration suffix. Keychain items and the
   # support directory hang off this, so Debug and Release share them — one
   # build's API keys are the other's, which is what you want while developing.
-  baseID: &BASE_ID me.xueshi.qduo
+  baseID: &BASE_ID uk.arc.grabscope
   # What the Release build ships as. Debug appends ".debug" below so both can
   # be installed at once.
-  bundleID: &BUNDLE_ID me.xueshi.qduo
-  repoURL: &REPO_URL https://github.com/XueshiQiao/qduo
+  bundleID: &BUNDLE_ID uk.arc.grabscope
+  repoURL: &REPO_URL https://github.com/markyo58/grabscope
   # The URL scheme other apps call actions through (qduo://run/…). Debug uses
   # its own below, or the two builds would fight over one scheme.
-  urlScheme: &URL_SCHEME qduo
-  feedURL: &FEED_URL https://github.com/XueshiQiao/qduo/releases/latest/download/appcast.xml
+  urlScheme: &URL_SCHEME grabscope
+  feedURL: &FEED_URL https://github.com/markyo58/grabscope/releases/latest/download/appcast.xml
 
 options:
-  bundleIdPrefix: me.xueshi
+  bundleIdPrefix: uk.arc
   deploymentTarget:
     macOS: "13.0"
   xcodeVersion: "15.0"
@@ -45,16 +45,16 @@ packages:
     from: "2.4.0"
 
 schemes:
-  QDuo:
+  GrabScope:
     build:
       targets:
-        QDuo: all
+        GrabScope: all
     test:
       targets:
-        - QDuoTests
+        - GrabScopeTests
 
 targets:
-  QDuo:
+  GrabScope:
     type: application
     platform: macOS
     sources:
@@ -73,7 +73,7 @@ targets:
         SU_FEED_URL: *FEED_URL
         # Restricted entitlement: must match the Developer ID provisioning
         # profile's allowlist, or AMFI kills the notarized app at launch.
-        BRAND_KEYCHAIN_GROUP: me.xueshi.qduo.keychain
+        BRAND_KEYCHAIN_GROUP: uk.arc.grabscope.keychain
 
         INFOPLIST_FILE: Supporting/Info.plist
         CODE_SIGN_ENTITLEMENTS: Supporting/App.entitlements
@@ -91,9 +91,9 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
       configs:
         Debug:
-          PRODUCT_BUNDLE_IDENTIFIER: me.xueshi.qduo.debug
-          PRODUCT_NAME: QDuo-Debug
-          BRAND_URL_SCHEME: qduo-debug
+          PRODUCT_BUNDLE_IDENTIFIER: uk.arc.grabscope.debug
+          PRODUCT_NAME: GrabScope-Debug
+          BRAND_URL_SCHEME: grabscope-debug
     dependencies:
       - package: Sparkle
       - package: Aptabase
@@ -113,7 +113,7 @@ targets:
   # would wake all of that (and its Accessibility prompts) on every run. The
   # files under test compile straight into the bundle instead — which they can,
   # being geometry and arithmetic. Adding a file here is the price of that.
-  QDuoTests:
+  GrabScopeTests:
     type: bundle.unit-test
     platform: macOS
     sources:
@@ -157,7 +157,7 @@ targets:
       - path: Sources/Core/Backup/BackupLayout.swift
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: me.xueshi.qduo.tests
+        PRODUCT_BUNDLE_IDENTIFIER: uk.arc.grabscope.tests
         GENERATE_INFOPLIST_FILE: YES
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         SWIFT_VERSION: "5.9"

@@ -1,0 +1,266 @@
+{
+  "$schema": "./config.schema.json",
+  "actions": [
+    {
+      "iconSymbol": "doc.on.doc",
+      "id": "98E51B3D-F0A9-4450-B4AB-5F08AA2EF76D",
+      "schemaVersion": 1,
+      "title": "Copy",
+      "kind": "copy"
+    },
+    {
+      "iconSymbol": "doc.on.clipboard",
+      "id": "9A39E474-FD9E-41D0-8D59-1C345FA38475",
+      "schemaVersion": 1,
+      "title": "Paste over",
+      "kind": "script",
+      "script": "pbpaste",
+      "output": "replace"
+    },
+    {
+      "iconSymbol": "scope",
+      "id": "ACE41479-49FE-4AA0-B482-96780AC86FD6",
+      "schemaVersion": 1,
+      "title": "Judge",
+      "kind": "script",
+      "script": "~/.config/grabscope/selection_judge.py",
+      "output": "panel"
+    },
+    {
+      "iconSymbol": "lightbulb",
+      "id": "B25E554B-4C87-474E-B27B-A56AC9605D90",
+      "kind": "script",
+      "output": "copy",
+      "schemaVersion": 1,
+      "script": "~/.config/grabscope/to-claude.sh explain",
+      "title": "Explain"
+    },
+    {
+      "iconSymbol": "eye",
+      "id": "6666D26C-3232-4C3B-8F78-042137A70E42",
+      "kind": "script",
+      "output": "copy",
+      "schemaVersion": 1,
+      "script": "~/.config/grabscope/to-claude.sh tell",
+      "title": "Claude"
+    },
+    {
+      "iconSymbol": "wand.and.stars",
+      "id": "6EE1408D-43AC-4B37-B346-75C613C70AA0",
+      "kind": "ai",
+      "output": "compare",
+      "prompt": "You are a writing editor. Rewrite the user's text to be clearer, more fluent and natural, preserving its original language and meaning. Output ONLY the polished text, with no quotes, labels, or explanation.",
+      "schemaVersion": 1,
+      "title": "Polish",
+      "urlName": "polish"
+    },
+    {
+      "id": "6579382B-86FD-4ED9-B0BB-A1503CF74809",
+      "kind": "group",
+      "schemaVersion": 1,
+      "title": "More",
+      "iconSymbol": "ellipsis.circle",
+      "children": [
+        {
+          "iconSymbol": "safari",
+          "id": "6D50E8A2-E05A-40FF-9AD0-FA6554A68D92",
+          "kind": "webPreview",
+          "schemaVersion": 1,
+          "title": "Web Preview"
+        },
+        {
+          "iconSymbol": "eye",
+          "id": "95A41ADA-AC92-4668-9A11-AD6B41A87721",
+          "kind": "quickLook",
+          "schemaVersion": 1,
+          "title": "Preview"
+        },
+        {
+          "iconSymbol": "folder",
+          "id": "D4D863A0-78D9-4015-930A-4369388D8AD0",
+          "kind": "revealInFinder",
+          "schemaVersion": 1,
+          "title": "Show in Finder"
+        },
+        {
+          "iconSymbol": "text.insert",
+          "id": "5CDBC205-9A66-4F05-AC18-F95D42245FDB",
+          "kind": "script",
+          "output": "copy",
+          "schemaVersion": 1,
+          "script": "cat; (sleep 0.3; osascript -e 'tell application \"System Events\" to keystroke \"b\" using {control down, option down}') >/dev/null 2>&1 &",
+          "title": "To my box"
+        },
+        {
+          "iconSymbol": "scissors",
+          "id": "5BA2C66A-17E8-4A6C-9571-134B782D2775",
+          "kind": "script",
+          "output": "copy",
+          "schemaVersion": 1,
+          "script": "cat; (sleep 0.4; osascript -e 'tell application \"System Events\" to key code 51') >/dev/null 2>&1 &",
+          "title": "Cut"
+        },
+        {
+          "iconSymbol": "magnifyingglass",
+          "id": "709956E4-4034-4099-B748-6A7ACF35C7AF",
+          "kind": "openURL",
+          "schemaVersion": 1,
+          "title": "Search",
+          "url": "https://www.google.com/search?q={text}"
+        },
+        {
+          "iconSymbol": "speaker.wave.2.fill",
+          "id": "FD518F76-4036-4C26-873E-D2B7D2501B8E",
+          "kind": "speak",
+          "schemaVersion": 1,
+          "title": "Speak"
+        },
+        {
+          "iconSymbol": "chevron.left.forwardslash.chevron.right",
+          "id": "48D09C2F-DF39-46C8-ABC1-F94A299C7ECB",
+          "kind": "ai",
+          "prompt": "Explain what the user's code does, step by step, then point out any bugs or risky spots. Be concise. Respond in the language the user most likely reads, judging by any comments; default to English.",
+          "schemaVersion": 1,
+          "title": "Explain Code"
+        },
+        {
+          "iconSymbol": "text.quote",
+          "id": "5BF2C898-9899-4CD7-8CE4-288D2C789205",
+          "kind": "ai",
+          "prompt": "Summarize the user's text as a few short bullet points that keep every key fact. Respond in the same language as the text. Output ONLY the summary.",
+          "schemaVersion": 1,
+          "title": "Summarize"
+        },
+        {
+          "iconSymbol": "text.badge.checkmark",
+          "id": "98265C9E-14E9-4A56-85DA-5F2EC5DAF387",
+          "kind": "ai",
+          "prompt": "Correct the spelling, grammar and punctuation of the user's text. Change nothing else — keep its wording, tone, language and formatting. Output ONLY the corrected text.",
+          "schemaVersion": 1,
+          "title": "Fix Grammar"
+        },
+        {
+          "iconSymbol": "checkmark.seal",
+          "id": "C7C749D5-8107-4812-AE06-2FB4F3E12FB2",
+          "kind": "ai",
+          "prompt": "Rewrite the user's text in a formal, professional tone. Keep its language and meaning. Output ONLY the rewritten text.",
+          "schemaVersion": 1,
+          "title": "Formal"
+        },
+        {
+          "iconSymbol": "text.bubble",
+          "id": "CE315C46-2EBA-4195-B7BF-161B815BE517",
+          "kind": "ai",
+          "prompt": "Rewrite the user's text in a friendly, casual tone. Keep its language and meaning. Output ONLY the rewritten text.",
+          "schemaVersion": 1,
+          "title": "Casual"
+        },
+        {
+          "iconSymbol": "scissors",
+          "id": "C0D206BD-BF75-49C0-BE90-9B6ADC05251D",
+          "kind": "ai",
+          "prompt": "Rewrite the user's text to be as short as possible without losing meaning. Keep its language. Output ONLY the rewritten text.",
+          "schemaVersion": 1,
+          "title": "Concise"
+        },
+        {
+          "iconSymbol": "graduationcap",
+          "id": "49EA26B2-5FF9-42D5-96C3-8C3FE1D0A840",
+          "kind": "ai",
+          "prompt": "The user is learning the language of the selected text. Break the sentence down: its structure, the role of each part, and any idioms or grammar points worth knowing. Explain in Simplified Chinese if the text is not Chinese, otherwise in English. Be concise.",
+          "schemaVersion": 1,
+          "title": "Break Down Sentence"
+        },
+        {
+          "iconSymbol": "doc.on.doc",
+          "id": "46F5ED0D-9C16-4C7B-84D1-F2049373BE7C",
+          "kind": "copy",
+          "schemaVersion": 1,
+          "title": "Copy"
+        }
+      ]
+    },
+    {
+      "iconSymbol": "trash",
+      "id": "0A35DA45-142F-4373-A83F-B1A4D9ED01A0",
+      "schemaVersion": 1,
+      "title": "Delete",
+      "kind": "script",
+      "script": "printf ''",
+      "output": "replace"
+    }
+  ],
+  "capsule": {
+    "border": true,
+    "iconSize": 15,
+    "labelSize": 9
+  },
+  "donut": {
+    "autoHideOnExit": true,
+    "innerRadius": 54,
+    "outerRadius": 140,
+    "showIcons": true,
+    "showLabels": true,
+    "subSeam": 6,
+    "subThickness": 52
+  },
+  "general": {
+    "analytics": false,
+    "language": null
+  },
+  "history": {
+    "excludedApps": [
+      "com.apple.keychainaccess",
+      "com.apple.Passwords",
+      "com.1password.1password",
+      "com.agilebits.onepassword7",
+      "com.bitwarden.desktop"
+    ]
+  },
+  "models": {
+    "apiURL": "http://127.0.0.1:11435/v1",
+    "model": "haiku",
+    "provider": "ollama",
+    "thinking": "none"
+  },
+  "ocr": {
+    "autoCopy": true,
+    "enabled": true,
+    "hotKey": "shift+cmd+s"
+  },
+  "popup": {
+    "autoExpandHeight": true,
+    "copyFirstApps": [
+      "com.google.Chrome"
+    ],
+    "hotKey": "ctrl+opt+cmd+q",
+    "hotKeyEnabled": true,
+    "resultFontSize": 13,
+    "style": "liquidGlass",
+    "terminalApps": [
+      "com.mitchellh.ghostty",
+      "com.apple.Terminal",
+      "com.googlecode.iterm2",
+      "io.appmakes.otty",
+      "com.github.wez.wezterm",
+      "net.kovidgoyal.kitty",
+      "org.alacritty",
+      "dev.warp.Warp-Stable",
+      "me.xueshi.attache"
+    ]
+  },
+  "version": 1,
+  "webPreview": {
+    "fallbackToSearch": true,
+    "searchEngine": "bing"
+  },
+  "wheel": {
+    "autoHideOnExit": true,
+    "innerRadius": 54,
+    "outerRadius": 125,
+    "showIcons": true,
+    "showLabels": true,
+    "subSeam": 3,
+    "subThickness": 48
+  }
+}
