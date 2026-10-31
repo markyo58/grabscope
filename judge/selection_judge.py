@@ -87,6 +87,7 @@ def judge(text, choose_fn=None, links=LINKS, ring=None, explain=None):
                                                     input=s, capture_output=True, text=True, timeout=9).stdout))(t)
         log("code", "explain", len(t), ok)
         return "code", "explain", out.strip() or "(Claude gave no answer)"
+    # ponytail: the bell wakes EVERY watching session, not the one chat Mark used last; pol 5b034bbb owns the last-chat design
     (ring or (lambda s: subprocess.run([RING, "grabscope:judge", s], timeout=5)))(t)
     log("text", "chat", len(t), ok)
     return "text", "chat", "→ chat"
