@@ -11,11 +11,10 @@
     {
       "iconSymbol": "doc.on.clipboard",
       "id": "9A39E474-FD9E-41D0-8D59-1C345FA38475",
+      "kind": "keystroke",
       "schemaVersion": 1,
       "title": "Paste over",
-      "kind": "script",
-      "script": "pbpaste",
-      "output": "replace"
+      "keys": "cmd+v"
     },
     {
       "iconSymbol": "scope",
@@ -183,11 +182,10 @@
     {
       "iconSymbol": "trash",
       "id": "0A35DA45-142F-4373-A83F-B1A4D9ED01A0",
+      "kind": "keystroke",
       "schemaVersion": 1,
       "title": "Delete",
-      "kind": "script",
-      "script": "printf ''",
-      "output": "replace"
+      "keys": "delete"
     }
   ],
   "capsule": {
