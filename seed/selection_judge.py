@@ -17,6 +17,9 @@ LINKS = os.path.expanduser("~/Polaris/Staging/links/inbox.tsv")
 LOGDB = os.path.expanduser("~/.config/grabscope/judge.db")
 RING = os.path.expanduser("~/Polaris/Staging/bell/ring")
 ASK = os.path.expanduser("~/.config/grabscope/claude-ask.sh")
+FBQ = os.path.expanduser("~/ARCdev/TinyDev/TinySync/fbq.py")
+CLAUDE_APP = "com.anthropic.claudefordesktop"
+JOBNUM = re.compile(r"(?:#|fbq\s*)?(\d{1,5})")
 URL = re.compile(r"https?://\S+")
 
 
@@ -48,6 +51,53 @@ def link_kind(text):
     if host in ("youtu.be", "youtube.com") or host.endswith(".youtube.com"):
         return "youtube"
     return "web"
+
+
+def front_bundle():
+    """Bundle id of the frontmost app (the one the text was selected in; GrabScope never takes focus). lsappinfo is
+    native and needs no Automation grant. None when unreadable."""
+    try:
+        asn = subprocess.run(["lsappinfo", "front"], capture_output=True, text=True, timeout=2).stdout.strip()
+        out = subprocess.run(["lsappinfo", "info", "-only", "bundleid", asn], capture_output=True, text=True, timeout=2).stdout
+        m = re.search(r'bundleID="([^"]+)"', out)
+        return m.group(1) if m else None
+    except Exception:
+        return None
+
+
+def job_candidate(text):
+    """The job number a selection could mean ('1125', '#1125', 'fbq 1125'), else None. Digits only, short."""
+    m = JOBNUM.fullmatch(text.strip())
+    return int(m.group(1)) if m else None
+
+
+def ask_sitrep(n):
+    """Ask the SM for a briefing on job n: one fbq note, which the tracker's smstandby already shows the SM seat.
+    True when the note landed; False when there is no such job."""
+    r = subprocess.run([sys.executable, FBQ, "note", str(n), "SITREP ASKED: Mark via GrabScope"], capture_output=True,
+                       text=True, timeout=8, env=dict(os.environ, FBQ_HOLDER="grabscope"))
+    return r.returncode == 0 and "REFUSED" not in (r.stdout + r.stderr)
+
+
+def is_jobnumber(text, choose_fn=None):
+    """Is this unknown number meant as a job? Jev only (a year, a date or an amount say no). Jev down -> (False, False)."""
+    if os.environ.get("ARC_CHOOSE_OFF") == "1":
+        return False, False
+    try:
+        if choose_fn is None:
+            sys.path.insert(0, os.path.expanduser("~/ARC/DEV"))
+            import choose as _c
+            choose_fn = _c.choose
+        spec = {"id": "selection.judge.job", "version": 1, "mode": "active", "timeout": 3.0, "fallback_name": "not a job",
+                "questions": {"job": {"type": "noul", "instructions": "Is this number an fb job number, not a year, date or amount?",
+                                      "criteria": {"true": "A small queue number such as 1125", "false": "A year, date, amount or other number"}}},
+                "build_state": lambda i: {"text": i["text"]},
+                "policy": lambda a, i: "yes" if a["job"]["noul"] >= 0.8 else "no",
+                "fallback": lambda i: "no"}
+        got = choose_fn(spec, {"text": text})
+    except Exception:
+        return False, False
+    return got == "yes", True
 
 
 def is_code(text, choose_fn=None):
@@ -84,7 +134,7 @@ def log(kind, route, chars, jev_ok):
         pass   # a log failure never costs the tap
 
 
-def judge(text, choose_fn=None, links=LINKS, ring=None, explain=None):
+def judge(text, choose_fn=None, links=LINKS, ring=None, explain=None, front=None, sitrep=None):
     """Route one selection. Returns (kind, route, result_text). ring/explain injectable for tests."""
     t = text.strip()
     lk = link_kind(t)
@@ -95,6 +145,15 @@ def judge(text, choose_fn=None, links=LINKS, ring=None, explain=None):
             fh.write("%s\t%s\t%s\t\t\n" % (utc(), lk, t))
         log(lk, "links", len(t), True)
         return lk, "links", "Added to Links (%s):\n%s" % (lk, t)
+    n = job_candidate(t)
+    if n is not None and (front or front_bundle)() == CLAUDE_APP:   # job numbers only count inside the Claude app
+        if (sitrep or ask_sitrep)(n):
+            log("jobnumber", "sm", len(t), True)
+            return "jobnumber", "sm", "Job %d → SM briefing asked" % n
+        yes, ok = is_jobnumber(t, choose_fn)
+        if yes:
+            log("jobnumber", "none", len(t), ok)
+            return "jobnumber", "none", "no job %d" % n
     code, ok = is_code(t, choose_fn)
     if code:
         out = (explain or (lambda s: subprocess.run([ASK, "Explain what this code or command does, briefly."],

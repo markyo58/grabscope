@@ -27,6 +27,22 @@ class T(unittest.TestCase):
             self.assertEqual(self.run_(raw, lambda *a: self.fail("Jev called"))[0], kind, raw)
         self.assertTrue(open(self.links).read().splitlines()[0].split("\t")[2].startswith("https://"))
 
+    def test_job_number_only_inside_claude(self):
+        asked = []
+        ok = lambda n: asked.append(n) or True
+        no_job = lambda n: False
+        call = lambda text, front, sitrep, choose=lambda *a: "no": j.judge(text, choose_fn=choose, links=self.links, ring=self.rung.append,
+                                                                     explain=lambda s: "x", front=lambda: front, sitrep=sitrep)
+        self.assertEqual(call(" #1125 ", j.CLAUDE_APP, ok)[:2], ("jobnumber", "sm"))
+        self.assertEqual(call("fbq 7", j.CLAUDE_APP, ok)[2], "Job 7 → SM briefing asked")
+        self.assertEqual(asked, [1125, 7])
+        self.assertEqual(call("1125", "com.apple.TextEdit", ok)[:2], ("text", "chat"))      # not Claude: normal route
+        self.assertEqual(asked, [1125, 7])
+        self.assertEqual(call("2026", j.CLAUDE_APP, no_job)[:2], ("text", "chat"))           # a year: Jev says no
+        self.assertEqual(call("99999", j.CLAUDE_APP, no_job, choose=lambda *a: "yes")[2], "no job 99999")
+        self.assertIsNone(j.job_candidate("1125 and more"))
+        self.assertIsNone(j.job_candidate("123456"))
+
     def test_code_goes_to_explain(self):
         self.assertEqual(self.run_("ls -la | wc -l", lambda *a: "yes"), ("code", "explain", "it does X"))
 
